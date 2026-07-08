@@ -47,7 +47,7 @@ jobs:
                 "github": {
                   "command": "docker",
                   "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server:v0.27.0"],
-                  "includeTools": ["create_branch", "create_or_update_file", "create_pull_request", "get_file_contents", "list_commits", "push_files", "search_code", "add_issue_comment"],
+                  "includeTools": ["issue_read", "create_branch", "create_or_update_file", "create_pull_request", "get_file_contents", "list_commits", "push_files", "search_code", "add_issue_comment"],
                   "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}" }
                 }
               },
@@ -55,9 +55,14 @@ jobs:
             }
           prompt: |
             A GitHub Issue was just opened describing a website change request.
-            Context is in .gemini/context.json (title, description, issue_number, repository).
+            Here is the issue context (title, description, issue_number, repository):
 
-            1. Read the issue title/description to understand the request.
+            ```json
+            @{.gemini/context.json}
+            ```
+
+            1. Read the title/description above to understand the request. If you need more
+               detail, use issue_read to fetch the full issue.
             2. Investigate the repo with get_file_contents to find the relevant files.
             3. Create a new branch with create_branch.
             4. Make the requested changes using create_or_update_file (or push_files for
